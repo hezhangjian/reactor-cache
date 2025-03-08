@@ -1,0 +1,9 @@
+# macOS
+**/.DS_Store
+
+# IDE
+.idea/**
+**.iml
+
+# Build output directories
+**/target
