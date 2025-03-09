@@ -53,7 +53,7 @@ public class ReactorCaffeineLoadingCache<K, V> {
         return Mono.fromRunnable(() -> cache.synchronous().invalidateAll());
     }
 
-    public static <K, V> Builder<K, V> newBuilder() {
+    public static <K, V> Builder<K, V> builder() {
         return new Builder<>();
     }
 
