@@ -2,6 +2,7 @@ package com.hezhangjian.reactor.caffeine.core;
 
 import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.jspecify.annotations.NonNull;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -10,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 public class ReactorCaffeineCache<K, V> {
     private final AsyncCache<K, V> cache;
 
-    private ReactorCaffeineCache(Builder<K, V> builder) {
+    private ReactorCaffeineCache(Builder<? super K, ? super V> builder) {
         Caffeine<Object, Object> caffeine = Caffeine.newBuilder();
         caffeine.maximumSize(builder.maximumSize);
 
@@ -31,7 +32,11 @@ public class ReactorCaffeineCache<K, V> {
      * @see AsyncCache#getIfPresent(Object)
      */
     public Mono<V> getIfPresent(K key) {
-        return Mono.fromFuture(cache.getIfPresent(key));
+        CompletableFuture<@NonNull V> future = cache.getIfPresent(key);
+        if (future == null) {
+            return Mono.empty();
+        }
+        return Mono.fromFuture(future);
     }
 
     public Mono<Void> put(K key, Mono<V> value) {
@@ -58,8 +63,8 @@ public class ReactorCaffeineCache<K, V> {
         return Mono.fromRunnable(() -> cache.synchronous().invalidateAll());
     }
 
-    public static <K, V> Builder<K, V> builder() {
-        return new Builder<>();
+    public static Builder<Object, Object> builder() {
+        return new Builder<Object, Object> ();
     }
 
     public static class Builder<K, V> {
@@ -106,8 +111,8 @@ public class ReactorCaffeineCache<K, V> {
             return this;
         }
 
-        public ReactorCaffeineCache<K, V> build() {
-            return new ReactorCaffeineCache<>(this);
+        public <K1 extends K, V1 extends V>  ReactorCaffeineCache<K1, V1> build() {
+            return new ReactorCaffeineCache<K1, V1>(this);
         }
     }
 }
