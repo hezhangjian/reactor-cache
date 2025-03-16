@@ -21,7 +21,7 @@
         <!-- dependency -->
         <annotations.version>13.0</annotations.version>
         <caffeine.version>3.2.0</caffeine.version>
-        <junit.version>5.12.0</junit.version>
+        <junit.version>5.12.1</junit.version>
         <lombok.version>1.18.36</lombok.version>
         <reactor-core.version>3.7.0</reactor-core.version>
         <reactor-extra.version>3.5.1</reactor-extra.version>
